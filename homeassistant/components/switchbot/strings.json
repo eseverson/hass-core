@@ -106,6 +106,9 @@
       "light_level": {
         "name": "Light level"
       },
+      "firmware_version": {
+        "name": "Firmware version"
+      },
       "aqi_quality_level": {
         "name": "Air quality level",
         "state": {

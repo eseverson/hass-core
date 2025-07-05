@@ -58,6 +58,12 @@ SENSOR_TYPES: dict[str, SensorEntityDescription] = {
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
+    "firmware": SensorEntityDescription(
+        key="firmware",
+        translation_key="firmware_version",
+        entity_registry_enabled_default=False,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
     "co2": SensorEntityDescription(
         key="co2",
         native_unit_of_measurement=CONCENTRATION_PARTS_PER_MILLION,
@@ -140,6 +146,7 @@ async def async_setup_entry(
         if sensor in SENSOR_TYPES
     ]
     entities.append(SwitchbotRSSISensor(coordinator, "rssi"))
+    entities.append(SwitchbotFirmwareSensor(coordinator, "firmware"))
     async_add_entities(entities)
 
 
@@ -178,3 +185,12 @@ class SwitchbotRSSISensor(SwitchBotSensor):
         ):
             return service_info.rssi
         return None
+
+
+class SwitchbotFirmwareSensor(SwitchBotSensor):
+    """Representation of a Switchbot firmware sensor."""
+
+    @property
+    def native_value(self) -> str | int | None:
+        """Return the state of the sensor."""
+        return self.parsed_data.get("firmware")
